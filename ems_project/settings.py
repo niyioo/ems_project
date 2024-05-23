@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7qdwt%in_bgi=4v!&^nz(k4#3b(6e)jc9n9_(@pv*@0wuv@pv0'
+SECRET_KEY = 'django-insecure-2-(y9o)5m!u7%(x42ediukcn5*6gsc4-w)r$u2!jvn1(_=46^w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authentication',
+    'authentication'
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # Add other authentication classes here if needed
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_SECRET_KEY': 'your_secret_key_here',  # Change this to a secure key
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # Set token expiration
+    'JWT_ALLOW_REFRESH': True,
+}
