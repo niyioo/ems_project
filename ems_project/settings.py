@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authentication'
+    'authentication',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,9 +50,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
 ROOT_URLCONF = 'ems_project.urls'
+
+
+STATIC_URL = '/static/'
 
 
 TEMPLATES = [
@@ -88,9 +97,9 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'niyi',
-        'USER': 'ems',
-        'PASSWORD': 'root',
+        'NAME': 'ems_database',
+        'USER': 'neyoyo',
+        'PASSWORD': 'neyoyo',
         'HOST': 'localhost',  # Set to 'localhost' or your database server address
         'PORT': '3306',  # Default is '3306'
     }
@@ -147,7 +156,7 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_SECRET_KEY': 'your_secret_key_here',  # Change this to a secure key
+    'JWT_SECRET_KEY': '123456',  # Change this to a secure key
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # Set token expiration
     'JWT_ALLOW_REFRESH': True,
 }
