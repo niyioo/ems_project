@@ -10,14 +10,18 @@ import json
 @csrf_exempt
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST.get('email')  # Assuming frontend sends 'email' instead of 'username'
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'success': True, 'message': 'Login successful'})
-        else:
-            return JsonResponse({'success': False, 'message': 'Invalid email or password'}, status=400)
+        try:
+            data = json.loads(request.body)
+            username = data.get('email')  # Assuming frontend sends 'email' instead of 'username'
+            password = data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return JsonResponse({'success': True, 'message': 'Login successful'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid email or password'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
 
 @csrf_exempt
@@ -33,26 +37,13 @@ class UserRegisterView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
-            email = data.get('email')
+            username = data.get('email')  # Assuming frontend sends 'email' for registration
             password = data.get('password')
 
-            if not email or not password:
-                return JsonResponse({'success': False, 'message': 'Email and password are required'}, status=400)
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({'success': False, 'message': 'Username already exists'}, status=400)
 
-            if User.objects.filter(email=email).exists():
-                return JsonResponse({'success': False, 'message': 'Email already exists'}, status=400)
-
-            # Create a unique username by using the email
-            username = email.split('@')[0]  # Use the part before the '@' as username
-
-            # Ensure username uniqueness by appending a number if needed
-            original_username = username
-            counter = 1
-            while User.objects.filter(username=username).exists():
-                username = f"{original_username}{counter}"
-                counter += 1
-
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username, password=password)
 
             return JsonResponse({'success': True, 'message': 'Registration successful'})
 
