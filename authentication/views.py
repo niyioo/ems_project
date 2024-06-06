@@ -33,13 +33,26 @@ class UserRegisterView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
-            username = data.get('email')  # Assuming frontend sends 'email' for registration
+            email = data.get('email')
             password = data.get('password')
 
-            if User.objects.filter(username=username).exists():
-                return JsonResponse({'success': False, 'message': 'Username already exists'}, status=400)
+            if not email or not password:
+                return JsonResponse({'success': False, 'message': 'Email and password are required'}, status=400)
 
-            user = User.objects.create_user(username=username, password=password)
+            if User.objects.filter(email=email).exists():
+                return JsonResponse({'success': False, 'message': 'Email already exists'}, status=400)
+
+            # Create a unique username by using the email
+            username = email.split('@')[0]  # Use the part before the '@' as username
+
+            # Ensure username uniqueness by appending a number if needed
+            original_username = username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{original_username}{counter}"
+                counter += 1
+
+            user = User.objects.create_user(username=username, email=email, password=password)
 
             return JsonResponse({'success': True, 'message': 'Registration successful'})
 
