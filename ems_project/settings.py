@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 import datetime
 from pathlib import Path
+import logging
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s %(message)s',
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -160,3 +167,13 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # Set token expiration
     'JWT_ALLOW_REFRESH': True,
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'niyiolagbegi@gmail.com'
+EMAIL_HOST_PASSWORD = 'pkubtcrgzzskllgw'
+DEFAULT_FROM_EMAIL = 'niyiolagbegi@gmail.com'
+FRONTEND_URL = 'http://localhost:3000'
